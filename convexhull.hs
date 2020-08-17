@@ -37,7 +37,7 @@ vectorFromTwoPoints :: Point2d -> Point2d -> Vector2d
 vectorFromTwoPoints (Point fromx fromy) (Point tox toy) = Vector (tox - fromx) (toy - fromy)
 
 dotProduct :: Vector2d -> Vector2d -> Double
-dotProduct (Vector x1 y1) (Vector x2 y2) = (x1 * x2) + (y1 * y2)
+dotProduct (Vector x1 y1) (Vector x2 y2) = x1 * x2 + y1 * y2
 
 vectorLength :: Vector2d -> Double
 vectorLength (Vector x y) = sqrt $ x * x + y * y
