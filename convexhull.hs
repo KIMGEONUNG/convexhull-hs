@@ -1,3 +1,12 @@
+--------------------------------------------------------------
+----BEGIN DEFINITIONS FOR "PointBased"------------------------
+
+class PointBased p where 
+    ptCnt :: p -> Int
+
+----END DEFINITIONS FOR "PointBased"--------------------------
+--------------------------------------------------------------
+
 ----------------------------------------------------------------
 ----BEGIN DEFINITIONS FOR "Point2d"-----------------------------
 
@@ -39,6 +48,9 @@ instance Ord Point2d where
 
 instance Show Point2d where
     show (Point x y) = "X: " ++ show x ++ ", Y: " ++ show y
+
+instance PointBased Point2d where
+    ptCnt pt = 1
 
 ----END DEFINITIONS FOR "Point2d"-----------------------------
 --------------------------------------------------------------
@@ -97,6 +109,7 @@ instance Show Line where
 
 ----END DEFINITIONS FOR "Line"--------------------------------
 --------------------------------------------------------------
+
 
 -- return radian value
 vectorAngle :: Vector2d -> Vector2d -> Double
