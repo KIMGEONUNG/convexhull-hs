@@ -125,18 +125,23 @@ vectorAngle v1 v2 = acos $ dotProduct v1 v2 / vectorLength v1 / vectorLength v2
 vectorFromTwoPoints :: Point2d -> Point2d -> Vector2d
 vectorFromTwoPoints (Point fromx fromy) (Point tox toy) = Vector (tox - fromx) (toy - fromy)
 
+-- | The 'dotProduct' function retrive dot product from two vector.
 dotProduct :: Vector2d -> Vector2d -> Double
 dotProduct (Vector x1 y1) (Vector x2 y2) = x1 * x2 + y1 * y2
 
+-- | The 'crossProduct' function retrive z value of cross product from two vector.
 crossProduct :: Vector2d -> Vector2d -> Double
 crossProduct (Vector x1 y1) (Vector x2 y2) = x1 * y2 - y1 * x2
 
+-- | The 'vectorLength' function retrive length of a vector
 vectorLength :: Vector2d -> Double
 vectorLength (Vector x y) = sqrt $ x * x + y * y
 
+-- | The 'radianToDegree' function convert radian angle to degree angle 
 radianToDegree :: Double -> Double
 radianToDegree r = 180.0 / pi * r 
 
+-- | The 'degreeToRadian' function convert degree angle to radian angle 
 degreeToRadian :: Double -> Double
 degreeToRadian d = pi / 180.0 * d  
 
@@ -150,17 +155,17 @@ quicksort (p:xs) = (quicksort lesser) ++ [p] ++ (quicksort greater)
 
 -- | The 'Orientation' data type consists of 
 -- Clockwise(CW), CounterClockwise(CCW), Colinear(CL) 
-data Orientation = CW | CCW | CL
---
---pointOrientation :: Point2d -> Poin2d -> Point2d -> Orientation  
+data Orientation = CW | CCW | CL deriving (Show,Eq)
 
---giftWrapping :: [Point2d] -> [Point2d]
+pointOrientation :: Point2d -> Point2d -> Point2d -> Orientation  
+pointOrientation pt1 pt2 pt3 = 
+        let z = crossProduct (vectorFromTwoPoints pt1 pt2) (vectorFromTwoPoints pt1 pt3)
+        in if z > 0 then CCW else if z < 0 then CW else CL
 
-v1 = Vector 10 0
-v2 = Vector 0 10
+selectOne :: Point2d -> [Point2d] -> Point2d 
+selectOne pt pts = 
+    
 
-pt1 = Point 10 0
-pt2 = Point 0 10
 pts = [ Point 1 0
       , Point 0 0
       , Point 10 10
