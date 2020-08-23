@@ -1,3 +1,5 @@
+module Convexhull where 
+
 --------------------------------------------------------------
 ----BEGIN DEFINITIONS FOR "PointBased"------------------------
 
@@ -111,15 +113,23 @@ instance Show Line where
 --------------------------------------------------------------
 
 
--- return radian value
+-- | The 'vectorAngle' function retrive radian angle from two Vector2d
+-- two vector argumet is commutative, that is, it always retrive positive angle
+-- from 0 to 180 degree 
 vectorAngle :: Vector2d -> Vector2d -> Double
 vectorAngle v1 v2 = acos $ dotProduct v1 v2 / vectorLength v1 / vectorLength v2 
 
+-- | The 'vectorFromTwoPoints' function retrive Vector from Two points.
+-- The first arument is start point of result vector and the last is
+-- end of result vector
 vectorFromTwoPoints :: Point2d -> Point2d -> Vector2d
 vectorFromTwoPoints (Point fromx fromy) (Point tox toy) = Vector (tox - fromx) (toy - fromy)
 
 dotProduct :: Vector2d -> Vector2d -> Double
 dotProduct (Vector x1 y1) (Vector x2 y2) = x1 * x2 + y1 * y2
+
+crossProduct :: Vector2d -> Vector2d -> Double
+crossProduct (Vector x1 y1) (Vector x2 y2) = x1 * y2 - y1 * x2
 
 vectorLength :: Vector2d -> Double
 vectorLength (Vector x y) = sqrt $ x * x + y * y
@@ -137,6 +147,13 @@ quicksort (p:xs) = (quicksort lesser) ++ [p] ++ (quicksort greater)
         lesser  = filter (< p) xs
         greater = filter (>= p) xs
 
+
+-- | The 'Orientation' data type consists of 
+-- Clockwise(CW), CounterClockwise(CCW), Colinear(CL) 
+data Orientation = CW | CCW | CL
+--
+--pointOrientation :: Point2d -> Poin2d -> Point2d -> Orientation  
+
 --giftWrapping :: [Point2d] -> [Point2d]
 
 v1 = Vector 10 0
@@ -144,4 +161,11 @@ v2 = Vector 0 10
 
 pt1 = Point 10 0
 pt2 = Point 0 10
-pts = [ Point 1 0, Point 2 1, Point 2 0, Point (-1) 3]
+pts = [ Point 1 0
+      , Point 0 0
+      , Point 10 10
+      , Point 0 10
+      , Point 10 0
+      , Point 2 1
+      , Point 2 0 ]
+
