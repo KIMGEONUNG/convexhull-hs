@@ -20,3 +20,14 @@ In time complexity, "n" is the number of points and h is the number of poitns on
 - **Test Framework** : [Hspec](http://hspec.github.io/)
 
 ## Usage 
+
+```Haskell
+import Convexhull
+import Geos
+
+pts = [Point 2 4, Point 5 13, Point 4 3, Point 13 5, Point 0 0, Point 8 4, Point 10 10, Point 3 2, Point 10 0, Point 4 9, Point 0 10]
+
+convexPts = giftWrapping pts
+-- [Point 0 0, Point 0 10, Point 5 13, Point 10 10, Point 13 5, Point 10 0]
+
+```
