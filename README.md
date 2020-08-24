@@ -1,4 +1,4 @@
-## Convexhull Algorithm list
+## Convexhull Algorithm List
 
 Below list is convexhull algorithm names and time complexity inside parenthesis.
 In time complexity, "n" is the number of points and h is the number of poitns on convexhull.
@@ -16,7 +16,7 @@ In time complexity, "n" is the number of points and h is the number of poitns on
 
 ## Specification
 
-- **Benchmark** : Not to be determined
+- **Benchmark** : [vdrc](https://github.com/vdrc/The-Source-Code-and-Benchmark-Dataset-for-QuickhullDisk) 
 - **Test Framework** : [Hspec](http://hspec.github.io/)
 
 ## Usage 
