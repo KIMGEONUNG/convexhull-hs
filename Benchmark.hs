@@ -5,6 +5,12 @@ import Data.List (sortBy)
 import Data.Function (on)
 import Data.Typeable
 
+import Control.Exception
+import Formatting
+import Formatting.Clock
+import System.Clock
+
+
 import Convexhull
 import Geos
 
@@ -18,11 +24,26 @@ entry2point (Entry x y) = Point x y
 
 parser = map entry2point . map parseEntry . map (take 2) . map (drop 1) . map words . take takeNum . drop 1 . lines  
 
+main :: IO ()
 main = 
-    parser <$> readFile "N10000.txt" 
-    >>= \pts -> giftWrapping <$> return pts 
-    >>= \convexPts -> print convexPts
+    parser <$> readFile "N10000.txt" >>= \pts 
+    -> getTime Monotonic >>= \start
+    -> giftWrapping <$> return pts >>= \convexPts 
+    -> getTime Monotonic >>= \end
+    -> print convexPts >> print (end - start) 
 
+{-
+main = parser <$> readFile "N10000.txt" >>= \pts -> getTime Monotonic >>= \start -> giftWrapping <$> return pts >>= \convexPts -> getTime Monotonic >>= \end -> print convexPts >> print (end - start) 
+        IO [Point2d]                    >>= ([Point2d] -> IO ())   
+                                                    getTime Monotonic >>= \start -> giftWrapping <$> return pts >>= \convexPts -> getTime Monotonic >>= \end -> print convexPts >> print (end - start) 
+                                                    IO TimeSpec       >>= (TimeSpec -> IO ())
+                                                                                    giftWrapping <$> return pts >>= \convexPts -> getTime Monotonic >>= \end -> print convexPts >> print (end - start) 
+                                                                                    IO [Point2d]                >>= ([Point2d] -> IO ())
+                                                                                                                                  getTime Monotonic >>= \end -> print convexPts >> print (end - start) 
+                                                                                                                                  IO TimeSpec       >>= (TimeSpec -> IO ())
+                                                                                                                                                                print convexPts >> print (end - start) 
+                                                                                                                                                                IO ()           >> IO ()
+-}
 
 {-
 main = parser                <$> readFile "N10000.txt" >>=  \pts -> giftWrapping                    <$> pure pts       >>=   \convexPts -> print convexPts
@@ -32,6 +53,6 @@ main = parser                <$> readFile "N10000.txt" >>=  \pts -> giftWrapping
      = {IO [Point2d]}                                                                                                  >>= ({[Point2d]} -> {IO ()})
      =                                                                                                                                     {IO ()}
 
-*same with main = parser <$> readFile "N10000.txt" >>= \pts -> giftWrapping <$> pure pts >>= \convexPts -> print convexPts
+*same with : main = parser <$> readFile "N10000.txt" >>= \pts -> giftWrapping <$> pure pts >>= \convexPts -> print convexPts
 -} 
 
