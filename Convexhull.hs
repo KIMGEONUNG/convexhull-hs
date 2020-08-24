@@ -1,5 +1,8 @@
 module Convexhull where 
 
+import Data.List
+import Data.Ord
+
 --------------------------------------------------------------
 ----BEGIN DEFINITIONS FOR "PointBased"------------------------
 
@@ -112,12 +115,23 @@ instance Show Line where
 ----END DEFINITIONS FOR "Line"--------------------------------
 --------------------------------------------------------------
 
-
 -- | The 'vectorAngle' function retrive radian angle from two Vector2d
 -- two vector argumet is commutative, that is, it always retrive positive angle
 -- from 0 to 180 degree 
 vectorAngle :: Vector2d -> Vector2d -> Double
 vectorAngle v1 v2 = acos $ dotProduct v1 v2 / vectorLength v1 / vectorLength v2 
+
+-- | The 'polarAngle' function retrive radian angle from two Vector2d.
+-- It is different from 'vectorAngle' function because it does not commutative
+-- property and has range which is [0,360).
+-- The polar direction is always counter-clockwise
+polarAngle :: Vector2d -> Vector2d -> Double
+polarAngle v1 v2 =
+    let angle = acos $ dotProduct v1 v2 / vectorLength v1 / vectorLength v2 
+        cross = crossProduct v1 v2
+    in if cross >= 0 
+            then angle
+            else 2 * pi - angle
 
 -- | The 'vectorFromTwoPoints' function retrive Vector from Two points.
 -- The first arument is start point of result vector and the last is
@@ -152,6 +166,18 @@ quicksort (p:xs) = (quicksort lesser) ++ [p] ++ (quicksort greater)
         lesser  = filter (< p) xs
         greater = filter (>= p) xs
 
+removeElement :: Eq a => a -> [a] -> [a]
+removeElement _ [] = error "Fail : empty list"
+removeElement target (x:[]) = if target == x then [] else error "Fail : Element not found"
+removeElement target (x:xs) =
+    if target /= x then [x] ++ removeElement target xs else xs
+
+removeAllElement :: Eq a => a -> [a] -> [a] 
+removeAllElement target [] = []  
+removeAllElement target (x:xs) =
+    if target == x 
+        then removeAllElement target xs  
+        else [x] ++ removeAllElement target xs  
 
 -- | The 'Orientation' data type consists of 
 -- Clockwise(CW), CounterClockwise(CCW), Colinear(CL) 
@@ -162,15 +188,39 @@ pointOrientation pt1 pt2 pt3 =
         let z = crossProduct (vectorFromTwoPoints pt1 pt2) (vectorFromTwoPoints pt1 pt3)
         in if z > 0 then CCW else if z < 0 then CW else CL
 
-selectOne :: Point2d -> [Point2d] -> Point2d 
-selectOne pt pts = 
-    
+-- | The 'find2ndPt' function used in convexhull algorithm called gift wrapping. 
+-- The first point on the convexhull is leftmost point. And the second point   
+-- is on the location which every other points is on the same side.
+find2ndPt :: Point2d -> [Point2d] -> [Point2d] -> Point2d
+find2ndPt pt (target:pts1) pts2 =
+    let oris = map (pointOrientation pt target) pts2 
+    in if not $ any (==CCW) oris 
+        then target 
+        else find2ndPt pt pts1 pts2 
 
-pts = [ Point 1 0
-      , Point 0 0
-      , Point 10 10
-      , Point 0 10
-      , Point 10 0
-      , Point 2 1
-      , Point 2 0 ]
+-- | The 'findNextPt' function used in convexhull algorithm called gift wrapping. 
+-- The first point on the convexhull is leftmost point. And the second point   
+-- is on the location which every other points is on the same side.
+findNextPt :: Point2d -> Point2d -> Point2d -> [Point2d] -> [Point2d]
+findNextPt pt1 pt2 end pts =
+    let remains = removeAllElement pt2 pts
+        polarAngle' x = polarAngle (vectorFromTwoPoints pt2 pt1) (vectorFromTwoPoints pt2 x)
+        polarAngles = map polarAngle' remains
+        max' = maximumBy (comparing fst) (zip polarAngles remains)
+        target = snd max'
+    in if target /= end 
+            then target : findNextPt pt2 target end pts 
+            else []
 
+-- | The 'giftWrapping' function is convexhull algorithm known as Jarvis March 
+giftWrapping :: [Point2d] -> [Point2d]
+giftWrapping ([]) = error "Fail: Invalid point count" 
+giftWrapping (_:[]) = error "Fail: Invalid point count" 
+giftWrapping (_:_:[]) = error "Fail: Invalid point count" 
+giftWrapping pts = 
+    let distincts = nub pts 
+        sorted = quicksort distincts 
+        base = head sorted
+        rest = tail sorted
+        second = find2ndPt base rest rest
+    in [ base, second ] ++ findNextPt base second base sorted 
