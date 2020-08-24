@@ -1,5 +1,3 @@
-## Work in Progress ...
-
 ## Convexhull Algorithm list
 
 Below list is convexhull algorithm names and time complexity inside parenthesis.
@@ -7,7 +5,7 @@ In time complexity, "n" is the number of points and h is the number of poitns on
 
 | Algorithm Name                    | Time complexity | Implementation |
 |:----------------------------------|:---------------:|:--------------:|
-| Gift wrapping                     | O(nh)           | WIP            |
+| Gift wrapping                     | O(nh)           | O              |
 | Graham scan                       | O(nlog(n))      | X              |
 | Quick hull                        | O(nlog(n))      | X              |
 | Divide and conquer                | O(nlog(n))      | X              |
@@ -21,3 +19,4 @@ In time complexity, "n" is the number of points and h is the number of poitns on
 - **Benchmark** : Not to be determined
 - **Test Framework** : [Hspec](http://hspec.github.io/)
 
+## Usage 
